@@ -170,8 +170,8 @@ section { position: relative; }
 .chapters { display: grid; }
 .chapter { display: grid; grid-template-columns: clamp(70px, 7vw, 120px) minmax(0, 1fr); gap: 0 2vw; padding: 44px 0; border-top: 1px solid var(--line); transition: opacity 0.5s var(--ease); }
 .chapter:first-child { border-top: 0; padding-top: 0; }
-.chapter .ch-n { font: 800 clamp(48px, 5.4vw, 92px)/0.8 var(--font); letter-spacing: -0.06em; color: transparent; -webkit-text-stroke: 1.5px var(--grey-2); transition: color 0.5s var(--ease), -webkit-text-stroke-color 0.5s; }
-.chapter.on .ch-n { color: var(--red); -webkit-text-stroke-color: var(--red); }
+.chapter .ch-n { font: 800 clamp(48px, 5.4vw, 92px)/0.8 var(--font); letter-spacing: -0.06em; color: #e2ddd5; transition: color 0.5s var(--ease); }
+.chapter.on .ch-n { color: var(--red); }
 .ch-body h3 { font: 700 clamp(26px, 2.3vw, 40px)/1.06 var(--font); letter-spacing: -0.03em; }
 .ch-body p { margin-top: 14px; font-size: 17px; line-height: 1.6; color: #3e3b38; max-width: 56ch; }
 .ch-media-m { display: none; }
