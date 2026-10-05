@@ -190,9 +190,95 @@ function Areas() {
 
 const CYCLE = ['Аудитория', 'Идея', 'Контент-план', 'Сценарий', 'Съёмка', 'Монтаж', 'Текст', 'Публикация', 'Аналитика', 'Новый круг'];
 
+type Chapter = { n: string; title: string; body: JSX.Element; media: { video?: number; img?: string; cap: string } };
+
+const CHAPTERS: Chapter[] = [
+  {
+    n: '01', title: 'Три аудитории — три разговора',
+    body: (<>
+      <p>Одно сообщение для всех не&nbsp;работает. Под каждую группу менял темы, офферы, CTA и&nbsp;сценарии роликов.</p>
+      <div className="segments">
+        <div><i>С</i><b>Семьи</b><span>безопасность, удобство, что делать с&nbsp;детьми</span></div>
+        <div><i>В</i><b>Взрослые туристы</b><span>маршрут, виды, уровень сложности, цена</span></div>
+        <div><i>М</i><b>Молодёжь</b><span>эмоции, компания, лёгкий тон и&nbsp;юмор</span></div>
+      </div>
+    </>),
+    media: { video: 2, cap: 'Юмор как вход для молодой аудитории' },
+  },
+  {
+    n: '02', title: 'Контент прямо из\u00a0поездок',
+    body: <p>Ездил с&nbsp;группами и&nbsp;собирал материал на&nbsp;месте: фото, видео, реальные истории, полезную информацию от&nbsp;гидов. Потом превращал это в&nbsp;посты и&nbsp;ролики.</p>,
+    media: { video: 3, cap: 'Снято в поездке · Ергаки' },
+  },
+  {
+    n: '03', title: 'Не\u00a0только «купите тур»',
+    body: (<>
+      <p>Помогал развивать личный бренд руководителя компании. Коммуникация сместилась от&nbsp;прямой продажи к&nbsp;доверию и&nbsp;реальному опыту путешествий.</p>
+      <ul className="chips"><li>экспертные темы</li><li>интервью</li><li>личные истории</li><li>закулисье</li><li>разговорные форматы</li></ul>
+    </>),
+    media: { video: 1, cap: 'Подача через впечатление, а не через цену' },
+  },
+  {
+    n: '04', title: 'Цифры, а\u00a0не\u00a0ощущения',
+    body: (<>
+      <div className="two-col">
+        <div><b>Смотрел</b><span>охваты, просмотры, вовлечённость, реакции, клики</span></div>
+        <div><b>Тестировал</b><span>темы, хуки, первые секунды видео, CTA, подачу</span></div>
+      </div>
+      <p>Сравнивал форматы между собой и&nbsp;пересобирал контент-план по&nbsp;результатам. План держал примерно на&nbsp;две недели вперёд.</p>
+      <ul className="chips"><li>Reels</li><li>посты</li><li>Stories</li><li>экспертный контент</li></ul>
+    </>),
+    media: { video: 5, cap: 'Первые секунды решают всё' },
+  },
+  {
+    n: '05', title: 'И\u00a0вне экрана',
+    body: (<>
+      <p>Координировал группы школьников, общался с&nbsp;участниками поездок, помогал с&nbsp;расселением, планировал активности и&nbsp;досуг.</p>
+      <p>Ещё участвовал в&nbsp;организации контент-процессов команды из&nbsp;4+ человек и&nbsp;прорабатывал бартер с&nbsp;блогерами.</p>
+    </>),
+    media: { img: 'sunset', cap: 'В дороге' },
+  },
+];
+
+/** Sticky phone-sized screen: shows whatever the chapter in view is about. */
+function CaseMedia({ active }: { active: number }) {
+  const vids = useRef<(HTMLVideoElement | null)[]>([]);
+  useEffect(() => {
+    vids.current.forEach((v, i) => {
+      if (!v) return;
+      // a fast scroll can interrupt play(); try once more when the clip is ready
+      if (i === active && !reduced()) v.play().catch(() => v.addEventListener('canplay', () => { if (!v.paused) return; v.play().catch(() => {}); }, { once: true }));
+      else v.pause();
+    });
+  }, [active]);
+  return (
+    <figure className="case-media" aria-hidden="true">
+      <div className="cm-frame">
+        {CHAPTERS.map((c, i) => (
+          <div key={c.n} className={'cm-item' + (i === active ? ' on' : '')}>
+            {c.media.video
+              ? <video ref={(el) => { vids.current[i] = el; }} src={reel(c.media.video, 'mp4')} poster={reel(c.media.video, 'webp')} muted loop playsInline preload="none" />
+              : <img src={img(c.media.img!)} alt="" loading="lazy" />}
+          </div>
+        ))}
+        <span className="cm-n">{CHAPTERS[active].n}<small>/05</small></span>
+      </div>
+      <figcaption>{CHAPTERS[active].media.cap}</figcaption>
+    </figure>
+  );
+}
+
 function Case() {
   const root = useRef<HTMLElement>(null);
+  const [active, setActive] = useState(0);
   useReveal(root);
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.i)); }), { rootMargin: '-45% 0px -45% 0px' });
+    el.querySelectorAll('.chapter').forEach((c) => io.observe(c));
+    return () => io.disconnect();
+  }, []);
   return (
     <section className="case" id="case" ref={root}>
       <div className="case-head">
@@ -207,53 +293,25 @@ function Case() {
       </div>
 
       <div className="case-grid">
-        <aside className="case-quote" data-reveal="">
-          <p>«Контент&nbsp;— не&nbsp;публикация ради публикации. Сначала продукт и&nbsp;аудитория, потом идея, формат и&nbsp;подача.»</p>
-          <span>Я&nbsp;смотрю не&nbsp;только на&nbsp;охваты, а&nbsp;на&nbsp;то, что человек должен сделать после просмотра.</span>
+        <aside className="case-side">
+          <div className="case-quote" data-reveal="">
+            <p>«Контент&nbsp;— не&nbsp;публикация ради публикации. Сначала продукт и&nbsp;аудитория, потом идея, формат и&nbsp;подача.»</p>
+            <span>Я&nbsp;смотрю не&nbsp;только на&nbsp;охваты, а&nbsp;на&nbsp;то, что человек должен сделать после просмотра.</span>
+          </div>
+          <CaseMedia active={active} />
         </aside>
 
         <div className="chapters">
-          <article className="chapter" data-reveal="">
-            <span className="ch-n">01</span>
-            <h3>Три аудитории — три разговора</h3>
-            <p>Одно сообщение для всех не&nbsp;работает. Под каждую группу менял темы, офферы, CTA и&nbsp;сценарии роликов.</p>
-            <div className="segments">
-              <div><b>Семьи</b><span>безопасность, удобство, что делать с&nbsp;детьми</span></div>
-              <div><b>Взрослые туристы</b><span>маршрут, виды, уровень сложности, цена</span></div>
-              <div><b>Молодёжь</b><span>эмоции, компания, лёгкий тон и&nbsp;юмор</span></div>
-            </div>
-          </article>
-
-          <article className="chapter with-photo" data-reveal="">
-            <div>
-              <span className="ch-n">02</span>
-              <h3>Контент прямо из&nbsp;поездок</h3>
-              <p>Ездил с&nbsp;группами и&nbsp;собирал материал на&nbsp;месте: фото, видео, реальные истории, полезную информацию от&nbsp;гидов. Потом превращал это в&nbsp;посты и&nbsp;ролики.</p>
-            </div>
-            <figure><img src={img('field')} alt="Кадр из ролика: Ергаки с высоты" loading="lazy" width="720" height="1280" /><figcaption>Кадр из моего ролика · Ергаки</figcaption></figure>
-          </article>
-
-          <article className="chapter" data-reveal="">
-            <span className="ch-n">03</span>
-            <h3>Не&nbsp;только «купите тур»</h3>
-            <p>Помогал развивать личный бренд руководителя компании: экспертные темы, интервью, личные истории, закулисье и&nbsp;разговорные форматы. Коммуникация сместилась от&nbsp;прямой продажи к&nbsp;доверию и&nbsp;реальному опыту путешествий.</p>
-          </article>
-
-          <article className="chapter" data-reveal="">
-            <span className="ch-n">04</span>
-            <h3>Цифры, а&nbsp;не&nbsp;ощущения</h3>
-            <div className="two-col">
-              <div><b>Смотрел</b><span>охваты, просмотры, вовлечённость, реакции, клики, какие форматы работают лучше</span></div>
-              <div><b>Тестировал</b><span>темы, хуки, первые секунды видео, CTA, подачу</span></div>
-            </div>
-            <p>Сравнивал Reels, посты, Stories и&nbsp;экспертный контент — и&nbsp;пересобирал контент-план по&nbsp;результатам. План держал примерно на&nbsp;две недели вперёд.</p>
-          </article>
-
-          <article className="chapter" data-reveal="">
-            <span className="ch-n">05</span>
-            <h3>И&nbsp;вне экрана</h3>
-            <p>Координировал группы школьников, общался с&nbsp;участниками поездок, помогал с&nbsp;расселением, планировал активности и&nbsp;досуг. Ещё участвовал в&nbsp;организации контент-процессов команды из&nbsp;4+ человек и&nbsp;прорабатывал бартер с&nbsp;блогерами.</p>
-          </article>
+          {CHAPTERS.map((c, i) => (
+            <article key={c.n} className={'chapter' + (active === i ? ' on' : '')} data-i={i} data-reveal="">
+              <span className="ch-n" aria-hidden="true">{c.n}</span>
+              <div className="ch-body">
+                <h3>{c.title}</h3>
+                {c.body}
+                <figure className="ch-media-m">{c.media.video ? <img src={reel(c.media.video, 'webp')} alt="" loading="lazy" /> : <img src={img(c.media.img!)} alt="" loading="lazy" />}<figcaption>{c.media.cap}</figcaption></figure>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
