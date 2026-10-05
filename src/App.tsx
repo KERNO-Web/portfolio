@@ -246,9 +246,14 @@ const CHAPTERS: Chapter[] = [
       <p>Координировал группы школьников, общался с&nbsp;участниками поездок, помогал с&nbsp;расселением, планировал активности и&nbsp;досуг.</p>
       <p>Ещё участвовал в&nbsp;организации контент-процессов команды из&nbsp;4+ человек и&nbsp;прорабатывал бартер с&nbsp;блогерами.</p>
     </>),
-    media: { img: 'group', pos: '42% 50%', cap: 'Наша группа' },
+    media: { img: 'group', pos: '74% 50%', cap: 'Наша группа' },
   },
 ];
+
+const goChapter = (i: number) => {
+  const el = document.querySelectorAll<HTMLElement>('.chapter')[i];
+  if (el) scrollTo(el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.4);
+};
 
 /** Sticky phone-sized screen: shows whatever the chapter in view is about. */
 function CaseMedia({ active }: { active: number }) {
@@ -262,8 +267,8 @@ function CaseMedia({ active }: { active: number }) {
     });
   }, [active]);
   return (
-    <figure className="case-media" aria-hidden="true">
-      <div className="cm-frame">
+    <figure className="case-media">
+      <div className="cm-frame" aria-hidden="true">
         {CHAPTERS.map((c, i) => (
           <div key={c.n} className={'cm-item' + (i === active ? ' on' : '')}>
             {c.media.video
@@ -273,7 +278,16 @@ function CaseMedia({ active }: { active: number }) {
         ))}
         <span className="cm-n">{CHAPTERS[active].n}<small>/05</small></span>
       </div>
-      <figcaption>{CHAPTERS[active].media.cap}</figcaption>
+      <div className="cm-side">
+        <ol className="cm-index">
+          {CHAPTERS.map((c, i) => (
+            <li key={c.n} className={i === active ? 'on' : ''}>
+              <button onClick={() => goChapter(i)}><b>{c.n}</b><span>{c.title}</span></button>
+            </li>
+          ))}
+        </ol>
+        <figcaption key={active}>{CHAPTERS[active].media.cap}</figcaption>
+      </div>
     </figure>
   );
 }
