@@ -200,7 +200,7 @@ function Areas() {
 
 const CYCLE = ['Аудитория', 'Идея', 'Контент-план', 'Сценарий', 'Съёмка', 'Монтаж', 'Текст', 'Публикация', 'Аналитика', 'Новый круг'];
 
-type Chapter = { n: string; title: string; body: JSX.Element; media: { video?: number; img?: string; cap: string } };
+type Chapter = { n: string; title: string; body: JSX.Element; media: { video?: number; img?: string; pos?: string; cap: string } };
 
 const CHAPTERS: Chapter[] = [
   {
@@ -246,7 +246,7 @@ const CHAPTERS: Chapter[] = [
       <p>Координировал группы школьников, общался с&nbsp;участниками поездок, помогал с&nbsp;расселением, планировал активности и&nbsp;досуг.</p>
       <p>Ещё участвовал в&nbsp;организации контент-процессов команды из&nbsp;4+ человек и&nbsp;прорабатывал бартер с&nbsp;блогерами.</p>
     </>),
-    media: { img: 'sunset', cap: 'В дороге' },
+    media: { img: 'group', pos: '42% 50%', cap: 'Наша группа' },
   },
 ];
 
@@ -268,7 +268,7 @@ function CaseMedia({ active }: { active: number }) {
           <div key={c.n} className={'cm-item' + (i === active ? ' on' : '')}>
             {c.media.video
               ? <video ref={(el) => { vids.current[i] = el; }} src={reel(c.media.video, 'mp4')} poster={reel(c.media.video, 'webp')} muted loop playsInline preload="none" />
-              : <img src={img(c.media.img!)} alt="" loading="lazy" />}
+              : <img src={img(c.media.img!)} alt="" loading="lazy" style={{ objectPosition: c.media.pos }} />}
           </div>
         ))}
         <span className="cm-n">{CHAPTERS[active].n}<small>/05</small></span>
@@ -318,7 +318,7 @@ function Case() {
               <div className="ch-body">
                 <h3>{c.title}</h3>
                 {c.body}
-                <figure className="ch-media-m">{c.media.video ? <img src={reel(c.media.video, 'webp')} alt="" loading="lazy" /> : <img src={img(c.media.img!)} alt="" loading="lazy" />}<figcaption>{c.media.cap}</figcaption></figure>
+                <figure className="ch-media-m">{c.media.video ? <img src={reel(c.media.video, 'webp')} alt="" loading="lazy" /> : <img src={img(c.media.img!)} alt="" loading="lazy" style={{ objectPosition: c.media.pos }} />}<figcaption>{c.media.cap}</figcaption></figure>
               </div>
             </article>
           ))}
