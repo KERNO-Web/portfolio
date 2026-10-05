@@ -99,17 +99,15 @@ section { position: relative; }
 
 /* ---------- numbers ---------- */
 .numbers { padding: 6vh var(--pad) 14vh; }
-.numbers li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); align-items: end; column-gap: 4vw; padding: 2.2vw 0 2.4vw; border-top: 1px solid var(--line); }
+.numbers li { display: flex; align-items: flex-end; gap: clamp(20px, 3vw, 56px); padding: 2.2vw 0 2.4vw; border-top: 1px solid var(--line); }
 .numbers li:last-child { border-bottom: 1px solid var(--line); }
-.numbers .pre { grid-column: 1; grid-row: 1; align-self: start; font-size: 15px; font-weight: 600; color: var(--grey); margin-bottom: -8px; }
-.num { grid-column: 1; font: 800 clamp(72px, 11vw, 196px)/0.82 var(--font); letter-spacing: -0.06em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.numbers li:nth-child(even) { flex-direction: row-reverse; }
+.numbers li:nth-child(even) .cap { text-align: right; }
+.num { flex: none; font: 800 clamp(72px, 11vw, 196px)/0.82 var(--font); letter-spacing: -0.06em; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .num small { font-size: 0.5em; color: var(--red); letter-spacing: -0.02em; margin-left: 0.04em; }
-.numbers .cap { grid-column: 2; font-size: clamp(17px, 1.4vw, 21px); line-height: 1.35; color: #4a4744; padding-bottom: 0.6vw; max-width: 26ch; }
+.num-pre { font-style: normal; font-size: 0.32em; font-weight: 700; letter-spacing: -0.01em; color: var(--grey); margin-right: 0.12em; }
+.numbers .cap { font-size: clamp(17px, 1.4vw, 21px); line-height: 1.35; color: #4a4744; padding-bottom: 0.4vw; max-width: 24ch; }
 .numbers .cap b { display: block; color: var(--ink); font-weight: 700; font-size: 1.15em; }
-.numbers li:nth-child(even) { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); }
-.numbers li:nth-child(even) .num { grid-column: 2; text-align: right; }
-.numbers li:nth-child(even) .cap { grid-column: 1; grid-row: 1; }
-.numbers li:nth-child(even) .pre { grid-column: 2; justify-self: end; }
 
 /* ---------- areas ---------- */
 .areas { padding: 10vh var(--pad) 16vh; }
@@ -129,7 +127,7 @@ section { position: relative; }
 /* ---------- case ---------- */
 .case { padding: 14vh var(--pad) 16vh; background: var(--paper); border-block: 1px solid var(--line); }
 .case-head { display: grid; justify-items: start; gap: 18px; }
-.case-title { font: 800 clamp(64px, 12.4vw, 220px)/0.84 var(--font); letter-spacing: -0.06em; margin-top: 6px; }
+.case-title { font: 800 clamp(64px, 12.4vw, 220px)/0.9 var(--font); letter-spacing: -0.06em; margin-top: 6px; padding-bottom: 0.2em; }
 .case-lead { max-width: 46ch; font-size: clamp(18px, 1.5vw, 22px); line-height: 1.45; color: #3e3b38; }
 .cycle { display: flex; flex-wrap: wrap; gap: 10px 0; margin-top: 9vh; padding: 22px 0; border-block: 1px solid var(--line); font: 600 clamp(15px, 1.25vw, 19px)/1 var(--font); }
 .cycle span { display: inline-flex; align-items: center; animation: wave 10s infinite; animation-delay: calc(var(--i) * 0.6s); }
@@ -277,11 +275,9 @@ section { position: relative; }
   .intro-row { grid-template-columns: 1fr; gap: 28px; margin-top: 6vh; }
   .intro-photo { width: 78%; }
   .numbers { padding: 2vh 18px 10vh; }
-  .numbers li, .numbers li:nth-child(even) { grid-template-columns: 1fr; row-gap: 10px; padding: 26px 0; }
-  .numbers li:nth-child(even) .num, .numbers li:nth-child(even) .cap, .numbers li:nth-child(even) .pre { grid-column: 1; grid-row: auto; text-align: left; justify-self: start; }
-  .numbers .pre { margin-bottom: -4px; }
+  .numbers li, .numbers li:nth-child(even) { flex-direction: column; align-items: flex-start; gap: 12px; padding: 26px 0; }
+  .numbers li:nth-child(even) .cap { text-align: left; }
   .num { font-size: clamp(64px, 21vw, 110px); }
-  .numbers .cap { grid-column: 1; }
   .areas { padding: 8vh 18px 10vh; }
   .case { padding: 10vh 18px 12vh; }
   .cycle { font-size: 15px; }

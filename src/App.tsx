@@ -118,7 +118,7 @@ const NUMBERS: [number, string, string, string][] = [
   [60000, ' ₽', 'до', 'стоят туры, которые я продвигал'],
 ];
 
-function Count({ to, suffix }: { to: number; suffix: string }) {
+function Count({ to, suffix, pre }: { to: number; suffix: string; pre?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [v, setV] = useState(reduced() ? to : 0);
   useEffect(() => {
@@ -138,7 +138,7 @@ function Count({ to, suffix }: { to: number; suffix: string }) {
     io.observe(el);
     return () => io.disconnect();
   }, [to]);
-  return <span ref={ref} className="num">{v.toLocaleString('ru-RU').replace(/ /g, ' ')}<small>{suffix}</small></span>;
+  return <span ref={ref} className="num">{pre && <em className="num-pre">{pre}</em>}{v.toLocaleString('ru-RU').replace(/ /g, ' ')}<small>{suffix}</small></span>;
 }
 
 function Numbers() {
@@ -149,8 +149,7 @@ function Numbers() {
       <ol>
         {NUMBERS.map(([n, suf, unit, text], i) => (
           <li key={i} data-reveal="" style={{ ['--i' as string]: i }}>
-            {unit === 'до' && <span className="pre">до</span>}
-            <Count to={n} suffix={suf} />
+            <Count to={n} suffix={suf} pre={unit === 'до' ? 'до' : undefined} />
             <span className="cap">{unit !== 'до' && <b>{unit}</b>}{text}</span>
           </li>
         ))}
