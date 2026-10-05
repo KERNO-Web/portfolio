@@ -102,6 +102,16 @@ function Intro() {
         <div className="intro-side" data-reveal="">
           <p>Мне одинаково комфортно и&nbsp;за&nbsp;монтажом Reels, и&nbsp;с&nbsp;микрофоном перед залом.</p>
           <p className="muted">Я&nbsp;не&nbsp;только публикую посты: продумываю, кому и&nbsp;что мы&nbsp;говорим, снимаю, монтирую, пишу тексты, смотрю на&nbsp;цифры и&nbsp;меняю план, если формат не&nbsp;работает.</p>
+          <div className="modes">
+            <figure className="mode">
+              <img src={reel(3, 'webp')} alt="Кадр из ролика Романа: Ергаки" loading="lazy" width="540" height="960" />
+              <figcaption><b>За монтажом</b><span>Reels, Stories, посты</span></figcaption>
+            </figure>
+            <figure className="mode">
+              <img src={img('mic')} alt="Роман с микрофоном ведёт мероприятие" loading="lazy" width="900" height="1125" />
+              <figcaption><b>С микрофоном</b><span>сцена, зал, живой эфир</span></figcaption>
+            </figure>
+          </div>
         </div>
       </div>
     </section>
